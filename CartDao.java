@@ -3,7 +3,7 @@ package com.company;
 import java.sql.SQLException;
 import java.util.List;
 
-public class CartDao {
+public interface CartDao {
     public void checkOut() throws SQLException;
     public List<Book> listBooks() throws SQLException;
     public void addBook(Book book) throws SQLException;
