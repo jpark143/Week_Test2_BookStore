@@ -19,9 +19,29 @@ public class UsersDaoImpl implements UsersDao{
 			ResultSet resultSet = preparedStatement.executeQuery();
 		return resultSet.next();
 	}
+	//procedure used
+		public boolean checkUser(String name) throws SQLException {	
+			String sql = "select * from users where username= ?";
+			//String sql = "Call userPassword(?,?)";
+				PreparedStatement preparedStatement = connection.prepareStatement(sql);
+				preparedStatement.setString(1, name);
+				ResultSet resultSet = preparedStatement.executeQuery();
+			return resultSet.next();
+		}
     
     @Override
     public void menu() throws SQLException {
 
     }
+    @Override
+	public boolean createUser(String username, String password) throws SQLException {
+		String sql = "insert into users(username,password) values (?,?);";
+		//String sql = "Call userPassword(?,?)";
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setString(1, username);
+			preparedStatement.setString(2, password);
+			int resultSet = preparedStatement.executeUpdate();
+		return resultSet>0;
+		
+	}
 }
