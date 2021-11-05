@@ -13,7 +13,7 @@ public class BookDaoImpl implements BookDao{
     @Override
     public List<Book> getAllBooks() throws SQLException {
         List<Book> books = new ArrayList<>();
-        String sql = "select * from book";
+        String sql = "select a.id, a.title,a.author,a.ISBN,a.price,b.category,a.description from book a join category b on a.category = b.id;";
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery(sql);
         while (resultSet.next()){
@@ -33,9 +33,13 @@ public class BookDaoImpl implements BookDao{
     @Override
     public Book getById(int id) throws SQLException {
         Book book = new Book();
-        String sql = "select * from book where id = " + id;
-        Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery(sql);
+//      String sql = "select * from book where id = " + id;
+        String sql = "select a.id, a.title,a.author,a.ISBN,a.price,b.category,a.description from book a join category b on a.category = b.id where a.id =?";
+        
+		PreparedStatement preparedStatement = connection.prepareStatement(sql);
+		preparedStatement.setInt(1, id);
+		ResultSet resultSet = preparedStatement.executeQuery();
+        
         resultSet.next();
         if (resultSet != null){
             int bookId = resultSet.getInt(1);
