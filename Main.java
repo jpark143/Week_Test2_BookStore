@@ -18,13 +18,13 @@ public class Main {
             System.out.println("Select from the option");
             System.out.println("------------------------");
             System.out.println("Press 1: Register");
-            System.out.println("Press 1: Login");
-            System.out.println("Press 2: Exit");
+            System.out.println("Press 2: Login");
+            System.out.println("Press 3: Exit");
             System.out.println("------------------------");
-            int mainInput = scanner.nextInt();
+        	Scanner mainInput = new Scanner(System.in);
 
-            switch (mainInput) {
-                case 1:{
+            switch (mainInput.next()) {
+                case "1":{
                     System.out.println("Register");
                     System.out.println("Enter your username: ");
                     String username = scanner.next();
@@ -32,49 +32,54 @@ public class Main {
                     String password = scanner.next();
                     break;
                 }
-                case 2:{
+                case "2":{
                     System.out.println("Log in");
                     System.out.println("Enter your username: ");
                     String username = scanner.next();
                     System.out.println("Enter your password: ");
                     String password = scanner.next();
-
+                    
                     // after login
                     // while logged in
-                    System.out.println("Book Store Menu");
-                    System.out.println("Select from the option");
-                    System.out.println("Press 1: View Book Categories");
-                    System.out.println("Press 2: View your cart");
-                    System.out.println("Press 3: Log Out");
-                    int storeInput = scanner.nextInt();
-
-                    switch (storeInput){
-                        case 1:{
-                            System.out.println("List of categories:");
-
-                            break;
-                        }
-                        case 2:{
-                            System.out.println("Items in your cart:");
-                            // display books in cart
-                            System.out.println("Press 1: Checkout");
-                            System.out.println("Press 2: Remove book");
-                            System.out.println("Press 3: Go back");
-                            break;
-                        }
-                        case 3:{
-                            System.out.println("Logging out...");
-                            System.out.println("See you soon!");
-                            // = false;
-
-                            break;
-                        }
-                        default:
-                            System.out.println("Wrong Input...");
-                    }
-                    break;
-                }
-                case 3:{
+                    if(udao.login(username, password)) {
+                    	boolean storeFlag = true;
+                    	while(storeFlag) {
+	                    System.out.println("Book Store Menu");
+	                    System.out.println("Select from the option");
+	                    System.out.println("Press 1: View Book Categories");
+	                    System.out.println("Press 2: View your cart");
+	                    System.out.println("Press 3: Log Out");
+	                    Scanner storeInput = new Scanner(System.in);
+	
+	                    switch (storeInput.next()){
+	                        case "1":{
+	                            System.out.println("List of categories:");
+	
+	                            break;
+	                        }
+	                        case "2":{
+	                            System.out.println("Items in your cart:");
+	                            // display books in cart
+	                            System.out.println("Press 1: Checkout");
+	                            System.out.println("Press 2: Remove book");
+	                            System.out.println("Press 3: Go back");
+	                            break;
+	                        }
+	                        case "3":{
+	                            System.out.println("Logging out...");
+	                            System.out.println("See you soon!");
+	                            storeFlag = false;
+	
+	                            break;
+	                        }
+	                        default:
+	                            System.out.println("Wrong input, please select an option from the list");
+	                    }
+	                }//While END
+                    	System.out.println(storeFlag);
+                    }//IF END
+                }//Store Loggin in Menu end
+                case "3":{
                     System.out.println("Exiting the Book Store");
                     System.out.println("Bye Bye!");
                     mainM = false;
