@@ -1,11 +1,10 @@
 package com.company;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Cart {
-    int item;
-    int bookId;
-    int userId;
-    String title;
-    double price;
+    List<Book> books = new ArrayList<Book>();
 
     // maybe cart needs to store book name and price as well?
 
@@ -13,52 +12,22 @@ public class Cart {
 
     }
 
-    public Cart(int item, String title, int bookId, int userId, double price){
-        this.item = item;
-        this.title = title;
-        this.bookId = bookId;
-        this.userId = userId;
-        this.price =price;
+    public Cart(Book book){
+        addBook(book);
 
     }
 
-    public int getItem() {
-        return item;
+    public void addBook(Book book) {
+		books.add(book);
+		System.out.println("\n"+book.getTitle()+" has been added to your cart\n");
+	} 
+
+    public List<Book> getList() {
+    	return this.books;
     }
 
-    public void setItem(int item) {
-        this.item = item;
-    }
-
-    public int getBookId() {
-        return bookId;
-    }
-
-    public void setBookId(int bookId) {
-        this.bookId = bookId;
-    }
-
-    public int getUserId() {
-        return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public double getPrice() {
-        return price;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
-    }
+	public void clear() {
+		books.clear();
+		System.out.println("Your cart has been cleared\n");
+	}
 }
