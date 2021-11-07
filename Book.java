@@ -78,15 +78,15 @@ public class Book {
     public void setDescription(String description) {
         this.description = description;
     }
-    
+
     public void printAllData() {
-    	System.out.printf("%5s | %55s | %15s|\n%s| %15s| %15s","id: "+this.id,this.title,"ISBN: "+this.isbn,"price: "+ this.price,this.category,this.description+"\n\n");
+        System.out.printf("%5s | %55s | %15s|\n%s| %15s| %15s","id: "+this.id,this.title,"ISBN: "+this.isbn,"price: "+ this.price,this.category,this.description+"\n\n");
     }
-    
+
     public void printShort() {
         //System.out.println("ID: "+ this.getId() +"\tTitle: "+ this.getTitle() +"\tAuthor: "+ this.getAuthor() +"\tISBN: "+ this.getIsbn());
-    	System.out.printf("%5s | %55s | %15s","id: "+this.id,this.title,"ISBN: "+this.isbn+"\n\n");
-    	
-    	
+        System.out.printf("%5s | %55s | %15s","id: "+this.id,this.title,"ISBN: "+this.isbn+"\n\n");
+
+
     }
 }

@@ -9,39 +9,39 @@ public class UsersDaoImpl implements UsersDao{
     }
 
 
-	//procedure used
-	public boolean login(String name, String password) throws SQLException {	
-		String sql = "select * from users where username= ? and password =?";
-		//String sql = "Call userPassword(?,?)";
-			PreparedStatement preparedStatement = connection.prepareStatement(sql);
-			preparedStatement.setString(1, name);
-			preparedStatement.setString(2, password);
-			ResultSet resultSet = preparedStatement.executeQuery();
-		return resultSet.next();
-	}
-	//procedure used
-		public boolean checkUser(String name) throws SQLException {	
-			String sql = "select * from users where username= ?";
-			//String sql = "Call userPassword(?,?)";
-				PreparedStatement preparedStatement = connection.prepareStatement(sql);
-				preparedStatement.setString(1, name);
-				ResultSet resultSet = preparedStatement.executeQuery();
-			return resultSet.next();
-		}
-    
+    //procedure used
+    public boolean login(String name, String password) throws SQLException {
+        String sql = "select * from users where username= ? and password =?";
+        //String sql = "Call userPassword(?,?)";
+        PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        preparedStatement.setString(1, name);
+        preparedStatement.setString(2, password);
+        ResultSet resultSet = preparedStatement.executeQuery();
+        return resultSet.next();
+    }
+    //procedure used
+    public boolean checkUser(String name) throws SQLException {
+        String sql = "select * from users where username= ?";
+        //String sql = "Call userPassword(?,?)";
+        PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        preparedStatement.setString(1, name);
+        ResultSet resultSet = preparedStatement.executeQuery();
+        return resultSet.next();
+    }
+
     @Override
     public void menu() throws SQLException {
 
     }
     @Override
-	public boolean createUser(String username, String password) throws SQLException {
-		String sql = "insert into users(username,password) values (?,?);";
-		//String sql = "Call userPassword(?,?)";
-			PreparedStatement preparedStatement = connection.prepareStatement(sql);
-			preparedStatement.setString(1, username);
-			preparedStatement.setString(2, password);
-			int resultSet = preparedStatement.executeUpdate();
-		return resultSet>0;
-		
-	}
+    public boolean createUser(String username, String password) throws SQLException {
+        String sql = "insert into users(username,password) values (?,?);";
+        //String sql = "Call userPassword(?,?)";
+        PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        preparedStatement.setString(1, username);
+        preparedStatement.setString(2, password);
+        int resultSet = preparedStatement.executeUpdate();
+        return resultSet>0;
+
+    }
 }

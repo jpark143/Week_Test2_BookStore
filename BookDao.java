@@ -6,6 +6,6 @@ import java.util.List;
 public interface BookDao {
     public List<Book> getAllBooks() throws SQLException;
     public Book getById(int id) throws SQLException;
-    public Category getByCategory(int id) throws SQLException;
-    // List category??
+    public List<Category> getAllCategory() throws SQLException;
+    public Book getByCategory(int id) throws SQLException;
 }
