@@ -64,20 +64,26 @@ public class Main {
         UsersDao udao = DaoFactory.getUsersDao();
         BookDao bdao = DaoFactory.getBookDao();
         CartDao cdao = DaoFactory.getCartDao();
-
+        //Initialize if find.
         Cart cart = new Cart();
 
         if(udao.login(username, password)) {
+        	Users user = udao.getUser(username);
             boolean storeFlag = true;
+            //If user exists login
             while(storeFlag) {
+            	//Load all content from cart table
+            	cart.initialize(user);
                 System.out.println("Book Store Menu");
                 System.out.println("Select from the option");
                 System.out.println("Press 1: View All Books");
                 System.out.println("Press 2: View by Category");
                 System.out.println("Press 3: Search by ID");
                 System.out.println("Press 4: View Cart");
-                System.out.println("Press 5: Checkout");
-                System.out.println("Press 6: Log Out");
+                System.out.println("Press 5: Remove From Cart");
+                System.out.println("Press 6: Clear Cart");
+                System.out.println("Press 7: Checkout");
+                System.out.println("Press 8: Log Out");
                 Scanner storeInput = new Scanner(System.in);
 
                 switch (storeInput.next()){
@@ -91,70 +97,20 @@ public class Main {
                         break;
                     }
                     case "2":{//Category
-                        System.out.println("List of Categories:");
+                        System.out.println("List of Categories:\n");
                         List<Category> categories = bdao.getAllCategory();
                         for (Category category: categories){
                             System.out.println("Category ID: " + category.getId() + " : " + category.getCategory());
                         }
                         // display Categories
-                        System.out.println("Enter Category ID you want to see: ");
+                        System.out.println("\nEnter Category ID you want to see");
                         Scanner scanner = new Scanner(System.in);
-                        int catId = scanner.nextInt();
-                        switch (catId){
-                            case 1:{
-                                System.out.println("List of Fiction Books: ");
-                                Book book = bdao.getByCategory(catId);
-                                System.out.println("Title: " + book.title + ", Author: " + book.author + ", ISBN: " + book.isbn + ", Price: " + book.price + ", Description: " + book.description);
-                                break;
-                            }
-                            case 2:{
-                                System.out.println("List of Non-Fiction Books: ");
-                                break;
-                            }
-                            case 3:{
-                                System.out.println("List of Mystery Books:");
-                                break;
-                            }
-                            case 4:{
-                                System.out.println("List of Thriller Books:");
-                                break;
-                            }
-                            case 5:{
-                                System.out.println("List of Horror Books:");
-                                break;
-                            }
-                            case 6:{
-                                System.out.println("List of Romance Books:");
-                                break;
-                            }
-                            case 7:{
-                                System.out.println("List of Western Books:");
-                                break;
-                            }
-                            case 8:{
-                                System.out.println("List of Bildungsroman Books:");
-                                break;
-                            }
-                            case 9:{
-                                System.out.println("List of Fantasy Books:");
-                                break;
-                            }
-                            case 10:{
-                                System.out.println("List of Science-Fiction Books:");
-                                break;
-                            }
-                            case 11:{
-                                System.out.println("List of Dystopian Books:");
-                                break;
-                            }
-                            case 12:{
-                                System.out.println("List of Magical Realism Books:");
-                                break;
-                            }
-                            default:
-                                System.out.println("Wrong input...");
-                                break;
-                        }
+                        int catId = 13;
+                        do {
+                        System.out.println("Requires a number between 1 and 12. Your input:");
+                        catId = enterInt();
+                        } while(catId > 12);
+                        bdao.getByCategory(catId);
 
                         break;
                     }
@@ -167,26 +123,35 @@ public class Main {
                         System.out.println("Would you like to buy this book?\n1. Yes\n2. No");
                         if(enterInt()==1) {
                             cart.addBook(book);
+                            cdao.addBook(book, user);
                         }
                         break;
-                    }
-
+                    }                    
                     case "4":{//Check CART
                         listCart(cart);
-
+                        break;
+                        
+                    }
+                    case "5":{//RemoveFrom CART
+                        System.out.println("\nPlease enter the id of the book you wish to remove:\n");
+                        int rem = enterInt();
+                        cdao.removeBook(rem, user, cart);
                         break;
                     }
-                    case "5":{//CHECKOUT
-                        buyCart(cart);
+                    case "6":{//Clear all CART
+                    	cdao.clearBooks(user, cart);
+                        break;
+                    }
+                    case "7":{//CHECKOUT
+                        buyCart(user, cart);
                         // display books in cart
 
                         break;
                     }
-                    case "6":{
+                    case "8":{
                         System.out.println("Logging out...");
                         System.out.println("See you soon!");
                         storeFlag = false;
-
                         break;
                     }
                     default:
@@ -197,8 +162,9 @@ public class Main {
         }//IF END
     }
 
-    private static void buyCart(Cart cart) {
+    private static void buyCart(Users user,Cart cart) throws SQLException {
         System.out.println("\nPrinting books in your cart\n");
+        CartDao cdao = DaoFactory.getCartDao();
         List<Book> list = cart.getList();
         double total =0;
         if(list.isEmpty()) {
@@ -215,7 +181,7 @@ public class Main {
         int answer = enterInt();
         if(answer ==1) {
             System.out.println("Transaction completed");
-            cart.clear();
+            cdao.clearBooks(user, cart);
         }
 
     }
@@ -232,7 +198,7 @@ public class Main {
             book.printAllData();
         }
     }
-
+    //Make sure its an int. Wont take no for an answer
     private static int enterInt() {
 
         boolean flag = true;

@@ -73,24 +73,32 @@ public class BookDaoImpl implements BookDao{
     }
 
     @Override
-    public Book getByCategory(int id) throws SQLException {
+    public void getByCategory(int id) throws SQLException {
         Book book = new Book();
-        String sql = "select * from book where category = " + id;
-        Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery(sql);
-        resultSet.next();
-        if (resultSet != null){
+        //String sql = "select * from book where category = ?";
+        String sql = "select a.id, a.title,a.author,a.ISBN,a.price,b.category,a.description from book a join category b on a.category = b.id where a.category =?;";
+        PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        preparedStatement.setInt(1, id);
+        ResultSet resultSet = preparedStatement.executeQuery();
+         int i =0;
+        while (resultSet.next()){
+        	
             int bookId = resultSet.getInt(1);
-            String title = resultSet.getNString(2);
-            String author = resultSet.getNString(3);
-            String isbn = resultSet.getNString(4);
+            String title = resultSet.getString(2);
+            String author = resultSet.getString(3);
+            String isbn = resultSet.getString(4);
             double price = resultSet.getDouble(5);
-            String category = resultSet.getNString(6);
-            String description = resultSet.getNString(7);
+            String category = resultSet.getString(6);
+            String description = resultSet.getString(7);
             book = new Book(bookId, title, author, isbn, price, category, description);
+            if(i ==0) {
+            System.out.println("\nBooks for the category "+category +":\n");
+            }
+            book.printShort();
+            i++;
         }
-        else
-            System.out.println("Error");
-        return book;
+       
+        
+        return;
     }
 }
