@@ -3,7 +3,6 @@ package com.company;
 public class Users {
     int id;
     String userName;
-    String password;
 
     public Users(){
 
@@ -12,7 +11,6 @@ public class Users {
     public Users(int id, String userName, String password){
         this.id = id;
         this.userName = userName;
-        this.password = password;
     }
 
     public int getId() {
@@ -31,11 +29,4 @@ public class Users {
         this.userName = userName;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
 }

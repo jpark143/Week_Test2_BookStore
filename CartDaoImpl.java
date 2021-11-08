@@ -17,31 +17,26 @@ public class CartDaoImpl implements CartDao{
 
     @Override
     // to get list of books in the cart
-    public List<Cart> listBooks() throws SQLException {
-        List<Cart> carts = new ArrayList<>();
-        String sql = "select * from cart";
-        Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery(sql);
+    public List<Book> listBooks(Users user) throws SQLException {
+        List<Book> Books = new ArrayList<>();
+        BookDao bdao = DaoFactory.getBookDao();
+        String sql = "select book_id from cart where user_id = ?";
+        PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        preparedStatement.setInt(1, user.getId());
+        ResultSet resultSet = preparedStatement.executeQuery();
         while (resultSet.next()){
-            int id = resultSet.getInt(1);
-            int bookId = resultSet.getInt(2);
-            int userId = resultSet.getInt(3);
-            String title = resultSet.getNString(4);
-            double price = resultSet.getDouble(5);
-            Cart cart = new Cart();
-            carts.add(cart);
+           Books.add(bdao.getById(resultSet.getInt(1)));
         }
-        return carts;
+        return Books;
     }
 
     @Override
     // add books to the cart
-    public void addBook(Book book, Users users) throws SQLException {
-        String sql = "insert into cart (book_id title user_id) values (?, ?, ?)";
+    public void addBook(Book book, Users user) throws SQLException {
+        String sql = "insert into cart (book_id, user_id) values (?, ?)";
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
         preparedStatement.setInt(1, book.getId());
-        preparedStatement.setString(2, book.getTitle());
-        preparedStatement.setInt(3, users.getId());
+        preparedStatement.setInt(2, user.getId());
         int count = preparedStatement.executeUpdate();
         if (count > 0){
             System.out.println("Book has been added to your cart!");
@@ -54,17 +49,37 @@ public class CartDaoImpl implements CartDao{
 
     @Override
     // remove books from the cart
-    public void removeBook(int id) throws SQLException {
-        String sql = "delete from cart where id = ?";
+    public void removeBook(int id,Users user,Cart cart) throws SQLException {
+        String sql = "delete from cart where user_id = ? and book_id =?";
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
-        preparedStatement.setInt(1, id);
+        preparedStatement.setInt(1, user.getId());
+        preparedStatement.setInt(2, id);
         int count = preparedStatement.executeUpdate();
         if (count == 1){
             System.out.println("Book has been removed from cart.");
             System.out.println(" ");
+            BookDao bDao = DaoFactory.getBookDao();
+            Book book = bDao.getById(id);
+            cart.removeBook(book);    
         }
+        
         else
             System.out.println("Error");
-
     }
+
+	@Override
+	public void clearBooks(Users user, Cart cart) throws SQLException {
+        String sql = "delete from cart where user_id = ?";
+        PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        preparedStatement.setInt(1, user.getId());
+        try {
+        preparedStatement.executeUpdate();    
+        cart.clear();    
+        }
+        
+        
+        catch(Exception E){
+            System.out.println("Error, please contact manager");
+        }	
+	}
 }
